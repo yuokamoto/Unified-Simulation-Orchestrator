@@ -1,5 +1,7 @@
 # 2. Unified Architecture
 
+![](./simulation_archi.drawio.svg)
+
 ## Layered Structure
 
 This framework is designed to handle multiple types of simulation engines in a unified manner,  
