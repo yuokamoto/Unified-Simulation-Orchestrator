@@ -24,7 +24,8 @@ enabling the reuse of assets and logic through the following layers:
 
 4. **Interface Layer**  
    - Abstracts communication between the Simulation Layer and external control/state management.  
-   - **Uses gRPC as the core communication protocol**, with a ROS2 wrapper available as needed.  
+   - **Internal communication (Master ⇔ Node)** uses **ZeroMQ** for lightweight, low-latency delta snapshot transmission.  
+   - **External communication (GUI/control systems ⇔ Master)** uses **gRPC** as the core protocol, with a ROS2 wrapper available as needed.  
    - Provides unified APIs for snapshot synchronization, event notifications, and control commands.
 
 5. **Tools Layer**  
@@ -48,8 +49,8 @@ enabling the reuse of assets and logic through the following layers:
    - Used for initialization, synchronization between distributed nodes, bug reproduction, logging, and replay.
 
 3. **Behavior Trees (BT)**  
-   - Defined in SCXML or BT XML as a common format, automatically converted by each node for execution.  
-   - For example: SimPy uses `py_trees`, while Gazebo or other engines may use `BehaviorTree.CPP`.
+   - Defined in **BT XML (BehaviorTree.CPP format)** as the official common format, automatically converted by each node for execution.  
+   - For example: SimPy converts BT XML to `py_trees`, while Gazebo or other engines use `BehaviorTree.CPP` directly.
 
 4. **During Simulation Execution**  
    - Scenario → Load referenced initial snapshot → Start simulation.  

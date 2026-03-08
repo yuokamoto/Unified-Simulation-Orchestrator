@@ -12,7 +12,7 @@ It is primarily **web-based (React + Three.js/Babylon.js)** and accessible via b
 
 - **Frontend (GUI ⇔ Web Server / Simulation Master)**  
   - Utilizes **WebSocket or gRPC-Web** for bidirectional communication.  
-  - The Web Server bridges with ZeroMQ to relay snapshots and events from the backend.
+  - The Web Server bridges with the Simulation Master's gRPC API and relays snapshots/events to the frontend via WebSocket.
 
 ---
 
@@ -31,14 +31,17 @@ It is primarily **web-based (React + Three.js/Babylon.js)** and accessible via b
 - Loads OpenUSD assets to render robots, humans, and equipment in 3D.
 - Receives delta snapshots via WebSocket for real-time scene updates.
 
+> **TODO:** Three.js has no native OpenUSD support. A conversion pipeline (USD → glTF) or an alternative rendering library (e.g., Babylon.js with USD extensions, or NVIDIA Omniverse streaming) needs to be evaluated before implementation.
+
 ### 2. Scenario Editor
 - Visualizes and edits YAML/JSON scenarios through the GUI.
 - Displays initial snapshots and event schedules along a timeline.
 - Sends saved scenarios to the Simulation Master via WebSocket.
 
 ### 3. Logic Editor (Behavior Tree Editor)
-- Edits SCXML or BT XML through the GUI.
+- Edits BT XML through the GUI.
 - Builds Behavior Trees via drag-and-drop and converts them for use in SimPy or Gazebo nodes.
+- Compatible with **Groot2** for advanced BT editing.
 
 ### 4. Log & Replay Viewer
 - Loads and replays stored snapshots via WebSocket.
@@ -57,6 +60,6 @@ It is primarily **web-based (React + Three.js/Babylon.js)** and accessible via b
 ## Data Flow
 
 1. Scenarios and Behavior Trees are edited in the GUI and sent to the server via WebSocket.  
-2. The Web Server relays them to the Simulation Master via ZeroMQ.  
+2. The Web Server relays them to the Simulation Master via gRPC.  
 3. During execution, delta snapshots are streamed from the Simulation Master via WebSocket and updated in the 3D view.  
 4. During replay, stored snapshots are loaded and visualized in the GUI.

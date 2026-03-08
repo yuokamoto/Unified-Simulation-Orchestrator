@@ -30,7 +30,7 @@ world:
       linear_velocity: [vx, vy, vz]  # 速度ベクトル
       angular_velocity: [wx, wy, wz] # 角速度
       status: <string>  # 任意の状態ラベル（"idle", "moving", "error"等）
-      connected_to: <asset_id or null>  # 接続されている他アセット（例: ロボットがパレットを運んでいる場合）
+      connected_to: [<asset_id>, ...]  # 接続されている他アセットのリスト（例: ロボットがパレットを運んでいる場合）。接続なしの場合は空リスト。
       properties:       # 内部状態や追加属性
         battery_level: 0.85
         custom_flags:
@@ -51,7 +51,7 @@ world:
         "position": [5.0, 1.0, 0.0],
         "linear_velocity": [0.5, 0.0, 0.0],
         "status": "moving",
-        "connected_to": "pallet_1"
+        "connected_to": ["pallet_1"]
       }
     },
     "removed_assets": ["human_2"],
@@ -64,7 +64,7 @@ world:
         "linear_velocity": [0, 0, 0],
         "angular_velocity": [0, 0, 0],
         "status": "idle",
-        "connected_to": null
+        "connected_to": []
       }
     }
   }
@@ -75,8 +75,13 @@ world:
 ---
 
 ## 接続状態の表現
-- `connected_to` フィールドを用いて、物理的な拘束を伴わない「論理的な接続」を表現可能。
-- これにより、物理シミュレーションを用いずとも、ロボットがパレットを運ぶ等の表現が可能。
+- `connected_to` フィールドは**アセットIDのリスト**であり、物理的な拘束を伴わない「論理的な接続」を表現可能。
+- これにより、以下のような状態を表現できる：
+  - ロボットが複数のパレットを運搬: `connected_to: ["pallet_1", "pallet_2"]`
+  - 棚が複数のアイテムを保持: `connected_to: ["item_1", "item_2", "item_3"]`
+  - コンベア上の荷物: `connected_to: ["package_1", "package_2"]`
+- 空リスト `[]` は接続なしを示す。
+- 物理シミュレーションを用いずとも、論理的な関係性のモデリングが可能。
 
 ---
 

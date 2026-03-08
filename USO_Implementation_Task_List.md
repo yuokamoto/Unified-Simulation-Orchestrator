@@ -73,8 +73,8 @@ This document outlines all implementation tasks for building the **Unified Simul
 ## 5. Logic and Scenario Management
 
 12. **Behavior Tree Conversion Tools**
-    - Convert SCXML → `py_trees` (Python).
-    - Convert SCXML → BehaviorTree.CPP XML (C++).
+    - Convert BT XML → `py_trees` (Python).
+    - Convert BT XML → BehaviorTree.CPP runtime (C++).
     - Integrate Groot2 for GUI editing.
 
 13. **Scenario Parser and Snapshot Initialization**

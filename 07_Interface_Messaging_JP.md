@@ -10,8 +10,8 @@
    - 軽量かつ低遅延で、大量の差分スナップショットをスケーラブルに伝送可能。
 
 2. **外部システム ⇔ Simulation Master 間（外部通信）**
-   - 現時点ではZeroMQを使用。
-   - 将来的な拡張としてgRPCやROS 2 ラッパーを追加可能。
+   - **gRPC** をコア通信プロトコルとして採用し、シミュレーションライフサイクル管理、外部制御、GUI連携に使用。
+   - 既存のROS 2ノード群とのシームレスな統合のために **ROS 2 ラッパー** を提供。
 
 ---
 
@@ -25,13 +25,19 @@
 **ZeroMQメッセージ例（差分スナップショット）**
 ```json
 {
-  "type": "delta_snapshot",
+  "type": "state_update",
   "timestamp": 123.45,
-  "changes": {
-    "robot_1": {
-      "position": [1.2, 3.4, 0.0],
-      "velocity": [0.5, 0.0, 0.0]
-    }
+  "node_id": "simpy_A",
+  "delta_snapshot": {
+    "updated_assets": {
+      "robot_1": {
+        "position": [1.2, 3.4, 0.0],
+        "linear_velocity": [0.5, 0.0, 0.0],
+        "status": "moving"
+      }
+    },
+    "removed_assets": [],
+    "new_assets": {}
   }
 }
 ```
@@ -81,13 +87,17 @@
 
 1. **ZeroMQ API**
    - 軽量なバイナリまたはJSONで、ステップ制御・スナップショット同期・イベントを伝送。
+   - 内部通信（Master ⇔ Node）専用。
 
 2. **gRPC API**
    - シミュレーションの開始、停止、リプレイ、外部監視ツールとの連携を管理。
+   - GUI、CLI、サードパーティ統合のためのコア外部通信プロトコル。
 
-2. **ROS 2 API**
+3. **ROS 2 API**
    - gRPCの機能をラップし、既存のROS 2 ノードから容易に利用可能。
    - 通信middlewareには zenoh を優先採用。
+
+---
 
 ## 実装上のポイント
   - ZeroMQのメッセージは軽量化のため、差分スナップショットのみを基本伝送。

@@ -11,13 +11,15 @@ By using BT, this framework enables:
 ---
 
 ## Formats
-1. **SCXML (State Chart XML)**  
-   - Uses a standardized state machine representation, which can be mapped to BTs.  
-   - Easy to edit using existing tools and editors.
 
-2. **BT XML (BehaviorTree.CPP format)**  
-   - Directly usable with Gazebo and C++ BT runtimes.  
-   - Converted into Python classes for execution with the `py_trees` library in SimPy.
+**BT XML (BehaviorTree.CPP format)** is the official common format for describing Behavior Trees in this framework.
+
+- Directly usable with Gazebo and C++ BT runtimes via `BehaviorTree.CPP`.  
+- Converted into Python classes for execution with the `py_trees` library in SimPy.  
+- Editable via GUI tools such as **Groot2**.  
+- Other engines can consume BT XML through provided plugins.
+
+> **Note:** SCXML (State Chart XML) is not used as a BT format. While SCXML is a valid state machine standard, it represents a fundamentally different paradigm from Behavior Trees. BT XML was chosen as the single official format to avoid ambiguity in conversion semantics.
 
 ---
 
@@ -31,7 +33,7 @@ By using BT, this framework enables:
 ### Gazebo Nodes
 - Runs in C++.  
 - Executes BTs using `BehaviorTree.CPP`.  
-- Automatically **converts shared BT XML into C++ node trees**, connecting each action to C++ functions or ROS2 nodes.
+- Loads shared BT XML directly and connects each action to C++ functions or ROS2 nodes.
 
 ### Other Simulation Engines (Mujoco, Genesis, Unreal, Isaac, etc.)
 - Each engine uses an appropriate BT runtime.  
@@ -49,10 +51,10 @@ By using BT, this framework enables:
 
 ## Execution Flow
 1. **Load BT File**  
-   - Each simulation node loads BTs written in SCXML or BT XML.
+   - Each simulation node loads BTs written in BT XML.
 2. **Engine-Specific Conversion**  
-   - SimPy: Converts SCXML to `py_trees`.  
-   - Gazebo/Unreal: Runs SCXML or BT XML via `BehaviorTree.CPP`.
+   - SimPy: Converts BT XML to `py_trees` Python classes.  
+   - Gazebo/Unreal: Loads BT XML directly via `BehaviorTree.CPP`.
 3. **Execution and Updates**  
    - BT is updated at each simulation step, determining actions for assets.
 4. **External Logic Integration**  

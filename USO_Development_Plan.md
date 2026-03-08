@@ -12,7 +12,7 @@
 | Single mode implementation | 2025-10-01 | 2025-10-06 |
 | SimPy Node (BT + logic sim) | 2025-10-08 | 2025-10-22 |
 | Gazebo Node (BT + physics sim) | 2025-10-22 | 2025-11-12 |
-| Behavior Tree converter (SCXML <-> py_trees/BT.CPP) | 2025-11-12 | 2025-11-22 |
+| Behavior Tree converter (BT XML <-> py_trees/BT.CPP) | 2025-11-12 | 2025-11-22 |
 | Scenario parser & snapshot init | 2025-11-22 | 2025-11-29 |
 | Web GUI (React + Three.js) core | 2025-11-29 | 2025-12-13 |
 | Scenario & BT editor integration | 2025-12-13 | 2025-12-23 |

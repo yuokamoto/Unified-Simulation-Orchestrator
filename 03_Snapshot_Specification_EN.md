@@ -30,7 +30,7 @@ world:
       linear_velocity: [vx, vy, vz]  # Linear velocity vector
       angular_velocity: [wx, wy, wz] # Angular velocity
       status: <string>  # Optional state label (e.g., "idle", "moving", "error")
-      connected_to: <asset_id or null>  # Other asset it is connected to (e.g., a robot carrying a pallet)
+      connected_to: [<asset_id>, ...]  # List of connected assets (e.g., a robot carrying pallets). Empty list if none.
       properties:       # Internal states or additional attributes
         battery_level: 0.85
         custom_flags:
@@ -51,7 +51,7 @@ world:
         "position": [5.0, 1.0, 0.0],
         "linear_velocity": [0.5, 0.0, 0.0],
         "status": "moving",
-        "connected_to": "pallet_1"
+        "connected_to": ["pallet_1"]
       }
     },
     "removed_assets": ["human_2"],
@@ -64,7 +64,7 @@ world:
         "linear_velocity": [0, 0, 0],
         "angular_velocity": [0, 0, 0],
         "status": "idle",
-        "connected_to": null
+        "connected_to": []
       }
     }
   }
@@ -75,8 +75,13 @@ world:
 ---
 
 ## Representing Connections
-- The `connected_to` field represents *logical* connections without physical constraints.
-- This allows expressing states like a robot carrying a pallet even without running full physics simulation.
+- The `connected_to` field is a **list of asset IDs**, representing *logical* connections without physical constraints.
+- This allows expressing states such as:
+  - A robot carrying multiple pallets: `connected_to: ["pallet_1", "pallet_2"]`
+  - A shelf holding multiple items: `connected_to: ["item_1", "item_2", "item_3"]`
+  - A conveyor with packages: `connected_to: ["package_1", "package_2"]`
+- An empty list `[]` indicates no connections.
+- This enables logical relationship modeling even without running full physics simulation.
 
 ---
 

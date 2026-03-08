@@ -10,8 +10,8 @@ and adopts the following protocol structure:
    - Provides lightweight, low-latency, and scalable transmission of large volumes of delta snapshots.
 
 2. **External Systems ⇔ Simulation Master (External Communication)**
-   - Currently uses ZeroMQ.
-   - gRPC and ROS 2 wrappers can be added as future extensions.
+   - Uses **gRPC** as the core communication protocol for simulation lifecycle management, external control, and GUI integration.
+   - A **ROS 2 wrapper** is available for seamless integration with existing ROS 2 node ecosystems.
 
 ---
 
@@ -25,13 +25,19 @@ and adopts the following protocol structure:
 **ZeroMQ Message Example (Delta Snapshot)**
 ```json
 {
-  "type": "delta_snapshot",
+  "type": "state_update",
   "timestamp": 123.45,
-  "changes": {
-    "robot_1": {
-      "position": [1.2, 3.4, 0.0],
-      "velocity": [0.5, 0.0, 0.0]
-    }
+  "node_id": "simpy_A",
+  "delta_snapshot": {
+    "updated_assets": {
+      "robot_1": {
+        "position": [1.2, 3.4, 0.0],
+        "linear_velocity": [0.5, 0.0, 0.0],
+        "status": "moving"
+      }
+    },
+    "removed_assets": [],
+    "new_assets": {}
   }
 }
 ```
@@ -81,9 +87,11 @@ and adopts the following protocol structure:
 
 1. **ZeroMQ API**
    - Uses lightweight binary or JSON messages for transmitting step control, snapshot synchronization, and event data.
+   - Used exclusively for internal Master ⇔ Node communication.
 
 2. **gRPC API**
    - Handles simulation lifecycle management (start, stop, replay) and integration with external monitoring tools.
+   - Serves as the core external communication protocol for GUI, CLI, and third-party integrations.
 
 3. **ROS 2 API**
    - Wraps the gRPC functionality to make it easily accessible from existing ROS 2 nodes.

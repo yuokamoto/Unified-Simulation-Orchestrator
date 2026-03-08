@@ -13,7 +13,7 @@ GUIは、シミュレーションの可視化、シナリオ編集、リプレ�
 
 - **フロントエンド（GUI ⇔ Webサーバー/Simulation Master）**  
   - **WebSocketまたはgRPC-Web**を採用。  
-  - WebサーバーがZeroMQと連携し、バックエンドからのスナップショットやイベントを中継。
+  - WebサーバーがSimulation MasterのgRPC APIと連携し、バックエンドからのスナップショットやイベントをWebSocket経由でフロントエンドに中継。
 
 ---
 
@@ -32,14 +32,17 @@ GUIは、シミュレーションの可視化、シナリオ編集、リプレ�
 - OpenUSDアセットをロードし、ロボット・人・設備の状態を3Dで描画。
 - 差分スナップショットをWebSocket経由で受信し、リアルタイム更新。
 
+> **TODO:** Three.jsはOpenUSDのネイティブサポートがない。実装前に、変換パイプライン（USD → glTF）または代替レンダリングライブラリ（Babylon.jsのUSD拡張、NVIDIA Omniverseストリーミング等）の評価が必要。
+
 ### 2. シナリオエディタ
 - YAML/JSONのシナリオをGUIで可視化・編集。
 - 初期スナップショットやイベントスケジュールをタイムライン表示で管理。
 - 保存したシナリオをWebSocket経由でSimulation Masterに送信。
 
 ### 3. ロジック編集（Behavior Tree Editor）
-- SCXMLまたはBT XMLをGUI上で編集。
+- BT XMLをGUI上で編集。
 - ドラッグ＆ドロップでBTを構築し、SimPy/Gazebo用に変換して送信。
+- **Groot2** との連携による高度なBT編集にも対応。
 
 ### 4. ログ・リプレイビューア
 - 保存済みスナップショットをWebSocket経由でロードして再生。
@@ -58,7 +61,7 @@ GUIは、シミュレーションの可視化、シナリオ編集、リプレ�
 ## データフロー
 
 1. GUIでシナリオやBTを編集し、WebSocketでサーバーへ送信。
-2. WebサーバーがZeroMQ経由でSimulation Masterに転送。
+2. WebサーバーがgRPC経由でSimulation Masterに転送。
 3. 実行中は、Simulation Masterからの差分スナップショットをWebSocket経由で受信し、3D表示を更新。
 4. ログ再生時は、保存済みスナップショットをロードし、GUIで再生。
 

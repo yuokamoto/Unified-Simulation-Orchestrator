@@ -44,17 +44,19 @@
 
 ## Rationale for Communication and Middleware Choices
 
-1. **gRPC (Core Communication)**
+1. **gRPC (External Communication)**
    - Provides fast, type-safe, bidirectional communication.
    - Supports multiple languages (Python, C++, JavaScript), unifying diverse stacks within the framework.
    - Enables streaming and bidirectional updates (simulation states, event notifications).
+   - Serves as the core protocol for GUI, CLI, and third-party tool integration with the Simulation Master.
 
 2. **ROS 2 (as a Wrapper)**
    - The standard communication backbone in robotics.
    - Simplifies integration with real robots and existing ROS2 node networks.
-   - Used as a wrapper rather than the core, **reducing complexity inside the simulation while preserving external connectivity**.
+   - Used as a wrapper over gRPC rather than the core, **reducing complexity inside the simulation while preserving external connectivity**.
 
 3. **ZeroMQ (Internal State Synchronization)**
+   - The sole communication mechanism for internal Master ⇔ Node messaging.
    - Optimized for fast, lightweight messaging in distributed simulations.
    - Lower latency than gRPC, suited for frequent state transfers and delta snapshot delivery between nodes.
    - Effective for high-throughput use cases (synchronization of deltas).
@@ -98,7 +100,7 @@
    - Shared Open-USD, URDF/SDF, YAML snapshots, and common BT enable cross-engine asset and logic reuse.
 
 3. **Communication Efficiency**  
-   - External connectivity via gRPC and high-speed internal messaging via ZeroMQ provide a flexible, high-performance distributed architecture.
+   - External connectivity via gRPC and high-speed internal messaging via ZeroMQ provide a clear separation of concerns and a high-performance distributed architecture.
 
 4. **Usability**  
    - GUI-based BT editing via Groot2, human-readable YAML, and open-standard formats  

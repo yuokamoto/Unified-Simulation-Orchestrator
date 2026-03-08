@@ -11,13 +11,15 @@
 ---
 
 ## フォーマット
-1. **SCXML (State Chart XML)**  
-   - 標準化されたステートマシン表現を用い、BTへのマッピングが可能。  
-   - ツールや既存エディタでの編集が容易。
 
-2. **BT XML (BehaviorTree.CPP形式)**  
-   - GazeboやC++系のBTランタイムで直接利用可能。  
-   - SimPyではPython用ライブラリ（`py_trees`）への変換を行う。
+**BT XML（BehaviorTree.CPP形式）** を本フレームワークにおけるBehavior Treeの正式な共通フォーマットとする。
+
+- GazeboやC++系のBTランタイム（`BehaviorTree.CPP`）で直接利用可能。  
+- SimPyではPython用ライブラリ（`py_trees`）への自動変換を行い実行。  
+- **Groot2** などのGUIツールで編集可能。  
+- 他エンジンはプラグインを通じてBT XMLを変換または直接読込可能。
+
+> **注記:** SCXML（State Chart XML）はBTフォーマットとしては採用しない。SCXMLはステートマシンの標準規格であり、Behavior Treeとは根本的に異なるパラダイムである。変換の曖昧さを排除するため、BT XMLを唯一の正式フォーマットとした。
 
 
 ---
@@ -49,10 +51,10 @@
 
 ## 実行フロー
 1. **BTファイルのロード**  
-   - SCXMLまたはBT XML形式のBTを、各シミュレーションノードがロード。
+   - BT XML形式のBTを、各シミュレーションノードがロード。
 2. **エンジンごとの変換**  
-   - SimPy: SCXMLを`py_trees`に変換。
-   - Gazebo/Unreal: SCXMLまたはBT XMLを`BehaviorTree.CPP`で実行。
+   - SimPy: BT XMLを`py_trees`のPythonクラスに変換。
+   - Gazebo/Unreal: BT XMLを`BehaviorTree.CPP`で直接ロード・実行。
 3. **実行と更新**  
    - 各シミュレーションステップでBTが更新され、アセットのアクションが決定される。
 4. **外部ロジック連携**  

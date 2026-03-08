@@ -29,7 +29,9 @@ and the Master operates in a simplified form to minimize overhead.
    - Distributes shared BT XML to all nodes and initializes local BT runtimes.
 
 5. **External API Provision**  
-   - Provides a gRPC-based core API and, when needed, a ROS2 wrapper for external control, GUI, and debugging tools.
+   - Provides a **gRPC-based external API** for GUI, CLI, and third-party tool integration.  
+   - A **ROS2 wrapper** is available for seamless integration with existing ROS2 node ecosystems.  
+   - Internal Master ⇔ Node communication uses **ZeroMQ** exclusively.
 
 6. **Logging and Replay Management**  
    - Stores global snapshots and event logs for offline replay and analysis.
@@ -113,3 +115,28 @@ class SimulationNode:
 5. Barrier synchronization ensures all nodes align before proceeding to the next step.
 
 Through this cycle, **consistent simulation state and time management** is achieved even in distributed environments.
+
+---
+
+## Asset Ownership Rules (Distributed Mode)
+
+In distributed mode, **each asset is owned by exactly one node** at any given time.  
+This ownership model prevents conflicting updates and ensures deterministic state management.
+
+1. **Single-Owner Principle**  
+   - Each asset (robot, human, object, etc.) is assigned to one and only one simulation node.  
+   - Only the owning node may update the asset's state (position, velocity, status, connections) in delta snapshots.  
+   - Other nodes receive the asset's state as read-only via the integrated snapshot from the Master.
+
+2. **Ownership Assignment**  
+   - Ownership is determined at initialization based on the scenario and initial snapshot.  
+   - The Simulation Master maintains the ownership registry and distributes it to all nodes.
+
+3. **Ownership Transfer**  
+   - When an asset needs to be handed off between nodes (e.g., a pallet moving from a SimPy logistics zone to a Gazebo physics zone), an explicit **ownership transfer request** is sent to the Master.  
+   - The Master coordinates the transfer, ensuring no two nodes update the same asset simultaneously.  
+   - During transfer, the asset's full state is synchronized to the new owner via a snapshot.
+
+4. **Conflict Detection**  
+   - If the Master receives delta snapshots from multiple nodes updating the same asset, it treats this as an error and logs a conflict warning.  
+   - The owning node's update takes precedence; non-owner updates are discarded.

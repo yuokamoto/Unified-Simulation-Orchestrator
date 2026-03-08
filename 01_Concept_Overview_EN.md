@@ -46,7 +46,7 @@ Therefore, instead of aiming for a single simulator to handle everything, this f
 2. **Reusability of Assets and Logic**  
    - Standardize 3D models with **OpenUSD**, making them usable across all rendering tools.
    - Describe robot structures in **URDF/SDF**, allowing shared use across Gazebo and other engines.
-   - Execute shared logic via **common Behavior Trees (SCXML/BT XML)** across SimPy, Gazebo, Unreal, and others.
+   - Execute shared logic via **common Behavior Trees (BT XML)** across SimPy, Gazebo, Unreal, and others.
 
 3. **Snapshot-Centric State Management**  
    - Represent the world state using **full snapshots** and **delta snapshots**,  
