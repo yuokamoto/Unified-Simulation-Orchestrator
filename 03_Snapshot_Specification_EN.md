@@ -91,3 +91,9 @@ world:
   1. **Initialization** – Apply at simulation start.
   2. **Synchronization** – Share state between nodes in distributed mode.
   3. **Logging** – Store historical states for replay and analysis.
+
+---
+
+## Related: Design Discussion Record
+
+The positioning of the snapshot as the source of truth for "state," and its role at the boundary with the training pipeline (the state/data supply API), are recorded in [13_Reuse_Layers_and_Format_Selection_EN.md](./13_Reuse_Layers_and_Format_Selection_EN.md) and [12_Layering_and_ML_Boundary_EN.md](./12_Layering_and_ML_Boundary_EN.md).

@@ -74,3 +74,9 @@
    - 例:  
      - SimPyで大規模なロジック検証 → Gazeboで物理動作検証 → Unreal Engineでデモ。
 
+---
+
+## 関連：設計議論の記録
+
+この層構造の背景にある設計原則、およびMLエコシステムとの境界の議論は [11_Design_Principles_JP.md](./11_Design_Principles_JP.md) と [12_Layering_and_ML_Boundary_JP.md](./12_Layering_and_ML_Boundary_JP.md) に記録されている。
+

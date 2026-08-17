@@ -91,3 +91,9 @@ world:
   1. **初期化** – シミュレーション開始時に適用。
   2. **同期** – 分散モードでの状態共有。
   3. **ログ保存** – 状態の履歴を保存し、リプレイや解析に利用。
+
+---
+
+## 関連：設計議論の記録
+
+スナップショットを「状態」を表すsource of truthとして扱う位置づけ、および学習パイプラインとの境界（state/data supply API）における役割は [13_Reuse_Layers_and_Format_Selection_JP.md](./13_Reuse_Layers_and_Format_Selection_JP.md) と [12_Layering_and_ML_Boundary_JP.md](./12_Layering_and_ML_Boundary_JP.md) に記録されている。

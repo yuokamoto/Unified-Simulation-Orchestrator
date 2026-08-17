@@ -73,3 +73,9 @@ enabling the reuse of assets and logic through the following layers:
    - Scenarios, snapshots, and BT definitions remain shared while only the simulation engine is switched.  
    - Example workflow:  
      - Large-scale logic validation in SimPy → Physics validation in Gazebo → Demo rendering in Unreal Engine.
+
+---
+
+## Related: Design Discussion Record
+
+The design principles behind this layered structure, and the discussion of the boundary with the ML ecosystem, are recorded in [11_Design_Principles_EN.md](./11_Design_Principles_EN.md) and [12_Layering_and_ML_Boundary_EN.md](./12_Layering_and_ML_Boundary_EN.md).
