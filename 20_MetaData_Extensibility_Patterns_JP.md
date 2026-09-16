@@ -13,15 +13,15 @@
 
 ## 参考：先行事例
 
-「**typeタグがどのスキーマに従うペイロードかを識別し、認識できないtypeはそのまま素通しされ、あるtypeのスキーマはそれを定義した者が所有・バージョン管理する**」という同じパターンは、広く使われている複数のシステムに繰り返し現れる：
+「**typeタグがどのスキーマに従うペイロードかを識別し、あるtypeのスキーマはそれを定義した者が所有・バージョン管理する**」という考え方のバリエーションは、広く使われている複数のシステムに繰り返し現れる。ただし細部は異なる（認識できないtypeを黙って無視するか、剪定するか、拒否するか。そもそも全てのペイロードが明示的なtypeタグを持つとは限らない）：
 
 - **Kubernetes** — `labels`/`annotations`（自由記述、`<domain>/<name>`の名前空間付きキー、検証なし） vs. **CustomResourceDefinition**（`kind`ごとに登録されたOpenAPI v3スキーマを持ち、`required`フィールドや検証を持てる。未知フィールドの保持も可能）
 - **Protocol Buffers** — `google.protobuf.Any`（`type_url`＋シリアライズされたペイロード。そのtypeを知っているconsumerだけが展開する）と、`Struct`/`Value`というwell-known type（公式に用意された「自由記述JSON」の逃げ道。厳密に型付けされたメッセージと対比される）
-- **CloudEvents**（CNCF） — イベントは`type`と`data`ペイロードを持ち、`data`のスキーマはその`type`を定義した者が所有する。`type`を認識しないconsumerでもイベントのルーティング・保存は可能
+- **CloudEvents**（CNCF） — イベントは`type`（イベント種別を識別）と`data`ペイロードを持つ。`data`が従うスキーマは別属性の任意項目`dataschema`が指し示し、それを定義した者が所有・バージョン管理する。`type`を認識しない（あるいはスキーマを持たない）consumerでも、イベントを不透明なままルーティング・保存することは可能
 - **OCI**（コンテナ／アーティファクト仕様） — `mediaType`/`artifactType`フィールドが、それ自体は不透明なペイロードの解釈方法を宣言する
-- **OpenAPI 3 / JSON Schema** — `discriminator` ＋ `oneOf`が、「あるフィールドの値によってどのスキーマが適用されるか決まる」という考え方を正式な構文として持つ
+- **JSON Schemaの`oneOf` ＋ OpenAPI 3の`discriminator`** — `oneOf`（JSON Schemaのキーワード）は、値が複数のスキーマのうちちょうど1つに一致することを要求する。`discriminator`（JSON Schema自体には無い、OpenAPI独自の拡張）は、その値がどのスキーマに該当するかを明示的に示すフィールドを追加し、全スキーマを総当たりで試す必要をなくす
 - **glTF**（Khronos） — コア仕様に加え、登録された`extensions`名前空間を持つ。`extensionsUsed`/`extensionsRequired`という配列により、ファイルが「ローダーがどの拡張を理解しなければ正しく解釈できないか」と「無視してよい拡張はどれか」を明示的に宣言できる
-- **OpenUSD**（Pixar） — USOがすでにアセット形式として依拠しているため直接関連が深い：プラグイン登録された **IsA / API schema** が型付き・必須の属性セットを提供し、**`customData`/`assetInfo`** はそれ以外の自由記述辞書として残る。これはUSOがすでに`reproduction_info` vs. `meta_data`で行った二層分割と同じものが、USOがすでに使っているフォーマット自体にネイティブに存在する例
+- **OpenUSD**（Pixar） — USOがすでにアセット形式として依拠しているため直接関連が深い：プラグイン登録された **IsA / API schema** が、フォールバック／デフォルト値を伴う型付き属性セットを定義する（これはUSD自体のスキーマ／デフォルト値の意味論であり、JSON Schemaのような必須フィールド検証を強制するものではない）。**`customData`/`assetInfo`** はそれ以外の自由記述辞書として残る。これはUSOがすでに`reproduction_info` vs. `meta_data`で行った二層分割と同じものが、USOがすでに使っているフォーマット自体にネイティブに存在する例
 - **OpenTelemetry** のsemantic conventions — 名前空間付きのwell-knownな属性キーと、任意のカスタム属性が同じオブジェクト上に共存する
 - **Confluent / Apicurio Schema Registry** — 中央レジストリがsubject（≒type名）をバージョン管理されたスキーマに対応づけ、バージョン間の互換性ルールを強制する。USOが`reproduction_info`や関節単位のフィールド（[17_Open_Questions_JP.md](./17_Open_Questions_JP.md) の項目6・8）を、既存利用者を壊さずにどう進化させるかの参考になる
 

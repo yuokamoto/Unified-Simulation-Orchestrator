@@ -33,7 +33,7 @@ Only sense (2) is what `reproduction_info` covers, and only a small, fixed set o
 
 An earlier draft of `reproduction_info` included a `camera` sub-field (pose + intrinsics). Revisiting this: a camera used for observation is not itself a piece of scene-wide configuration — it is a physical thing with a pose, exactly like any other asset. Two cases:
 
-- **Rigidly mounted sensor** (e.g., a robot's wrist camera): its world pose is always derivable from the parent asset's already-tracked pose plus a fixed extrinsic offset defined in the asset's model (URDF/USD). No additional snapshot field is needed — duplicating this pose in `reproduction_info` would just be redundant state that could drift out of sync with the parent.
+- **Rigidly mounted sensor** (e.g., a robot's wrist camera): its world pose is always derivable from the parent asset's already-tracked state — its root pose and, for an articulated asset, its already-tracked `joint_positions` — combined with the fixed mounting offset and kinematic chain defined in the asset's model (URDF/USD). No additional snapshot field is needed: for an articulated mount the derivation runs through the full joint chain, not just a single offset from the root, but it remains entirely a function of state the snapshot already carries, so duplicating a separate pose in `reproduction_info` would just be redundant state that could drift out of sync with the parent.
 - **Free-standing observation camera** (e.g., a fixed overview camera watching a workspace): this is simply another asset (`type: "camera"`) with its own `position`/`orientation`, tracked through the existing per-asset mechanism — no different from a robot or a pallet.
 
 In both cases, intrinsics (focal length, resolution, field of view, etc.) are static properties of the camera's model, not per-step dynamic data, so they belong with the asset's static description rather than in a dynamic global field.
@@ -44,7 +44,7 @@ This leaves `reproduction_info` holding only settings that genuinely have no sin
 
 This three-way split is a direct application of Principle 1 in [11_Design_Principles_EN.md](./11_Design_Principles_EN.md) (separate things that change for different reasons, bridge with a common format):
 
-- Per-asset dynamic state (`position`, `velocity`, `joint_positions`, `properties`, ...) changes every simulation step, for physics/logic reasons.
+- Per-asset dynamic state (`position`, `velocity`, `joint_positions`) changes every simulation step, for physics/logic reasons. The per-asset `properties` field is scoped the same way (per asset) but, being arbitrary user-defined data, carries no cadence guarantee of its own — it may change every step, rarely, or never.
 - `reproduction_info` changes at most once per episode (typically at reset), for rendering/observer-setup reasons.
 - `meta_data` changes at whatever rate a user chooses, for reasons entirely outside the framework's concern.
 

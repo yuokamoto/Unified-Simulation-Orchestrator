@@ -29,9 +29,12 @@ world:
       orientation: [qx, qy, qz, qw]  # Orientation as a quaternion
       linear_velocity: [vx, vy, vz]  # Linear velocity vector
       angular_velocity: [wx, wy, wz] # Angular velocity
-      joint_positions:  # Optional: for articulated assets (e.g., robot arms) only
+      joint_positions:  # Omit both joint_positions and joint_velocities for non-articulated assets.
+                        # For an articulated asset, a restoration-sufficient full snapshot requires
+                        # both together (pose alone cannot resume in-progress motion); how they
+                        # interact with delta snapshots is still open — see Open Question 6.
         <joint_name>: <float>   # Joint angle (rad) or displacement (m), per joint
-      joint_velocities: # Optional: for articulated assets only, same keys as joint_positions
+      joint_velocities: # Required together with joint_positions for articulated assets — see above
         <joint_name>: <float>   # Joint angular/linear velocity, per joint
       status: <string>  # Optional state label (e.g., "idle", "moving", "error")
       connected_to: [<asset_id>, ...]  # List of connected assets (e.g., a robot carrying pallets). Empty list if none.
@@ -39,7 +42,8 @@ world:
         battery_level: 0.85
         custom_flags:
           carrying_load: true
-  reproduction_info:   # Optional, global (not per-asset) — see "Global (Non-Asset) Fields" below
+  reproduction_info:   # Global (not per-asset); required only for consumers that regenerate rendered
+                        # images from state instead of storing them — see "Global (Non-Asset) Fields" below
     lighting: <structured lighting description>
     domain_randomization: {<param_name>: <value>, ...}
     seed: <int>
@@ -88,6 +92,8 @@ world:
 
 ```
 
+> **Non-normative:** the `updated_reproduction_info` / `updated_meta_data` keys above illustrate intent only. Whether an omitted field or key is retained, replaced, or deleted on the receiving end is not yet defined — see Open Question 8. Do not treat this example as settling that semantics.
+
 ---
 
 ## Representing Connections
@@ -106,7 +112,7 @@ world:
 Not everything a snapshot carries is per-asset state. Two additional fields live directly under `world`, alongside `assets`:
 
 - **`reproduction_info`** — Structured, typed data needed specifically to regenerate a rendered image from state without storing the image itself: **scene-wide** rendering/reproduction settings such as lighting and domain-randomization settings, plus the random seed used. This is *not* required to continue the simulation — physics does not need it. It is episode-scoped and normally unchanged for the duration of a run, so it is typically carried once in the full snapshot rather than repeated in every delta.
-  - **Cameras are not part of `reproduction_info`.** A camera used for observation is itself an asset, not global state: a sensor rigidly mounted on a robot (e.g., a wrist camera) has its world pose already derivable from the parent asset's tracked pose plus a fixed offset defined in its model, so it needs no separate snapshot field at all; a free-standing observation camera (e.g., a fixed overview camera) is tracked like any other asset (`type: "camera"`, with `position`/`orientation` as usual), with its intrinsics held as a static property of that asset's model rather than as per-step data. See [19_Snapshot_MetaData_and_Reproduction_Info_EN.md](./19_Snapshot_MetaData_and_Reproduction_Info_EN.md).
+  - **Cameras are not part of `reproduction_info`.** A camera used for observation is itself an asset, not global state: a sensor rigidly mounted on a robot (e.g., a wrist camera) has its world pose already derivable from the parent asset's tracked state — its root pose and, for an articulated asset, its already-tracked `joint_positions` — combined with the fixed mounting offset and kinematic chain defined in the asset's model, so it needs no separate snapshot field at all (a single fixed offset from the root pose is only sufficient when the camera is mounted directly on a non-articulated body); a free-standing observation camera (e.g., a fixed overview camera) is tracked like any other asset (`type: "camera"`, with `position`/`orientation` as usual), with its intrinsics held as a static property of that asset's model rather than as per-step data. See [19_Snapshot_MetaData_and_Reproduction_Info_EN.md](./19_Snapshot_MetaData_and_Reproduction_Info_EN.md).
 - **`meta_data`** — A freeform, user-defined bag of global (simulation-wide) data that is not required for any restoration purpose — the global-scope counterpart to the existing per-asset `properties` field. Use it for experiment tags, debug flags, or other custom data; its shape is intentionally unconstrained, so nothing in the framework or in an external consumer should depend on it being present or on any particular key existing.
 
 Both fields are optional. See [19_Snapshot_MetaData_and_Reproduction_Info_EN.md](./19_Snapshot_MetaData_and_Reproduction_Info_EN.md) for the design discussion behind this split, and [17_Open_Questions_EN.md](./17_Open_Questions_EN.md) for what remains unresolved (exact sub-field shapes).
@@ -114,7 +120,7 @@ Both fields are optional. See [19_Snapshot_MetaData_and_Reproduction_Info_EN.md]
 ---
 
 ## Operational Policy
-- Snapshots **only describe the world state**; position and velocity updates are handled within each simulator’s logic.
+- Snapshots primarily describe the world state (per-asset position, velocity, and other dynamic state; updates are handled within each simulator's logic). The global `reproduction_info` and `meta_data` fields (see "Global (Non-Asset) Fields" above) are the deliberate exception: they carry rendering/reproduction configuration and user metadata, not simulated world state.
 - Use cases:
   1. **Initialization** – Apply at simulation start.
   2. **Synchronization** – Share state between nodes in distributed mode.

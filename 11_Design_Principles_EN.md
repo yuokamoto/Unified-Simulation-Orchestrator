@@ -14,7 +14,7 @@ Every time the simulator or the robot changes, things that should conceptually s
 - When an element changes across simulators or robots, the reason it changes is not always the same. Sometimes it changes because of a genuine property of the task or robot; sometimes it changes only because of a given simulator's own concerns (friction model, renderer, how DOFs are represented, etc.).
 - If these two are not separated, adding a new simulator drags the essential part along for a rebuild every time.
 - USO therefore commits to **structurally separating things that change for different reasons, and bridging that boundary with common formats (OpenUSD, URDF/SDF, Behavior Tree XML, snapshots)**.
-- This principle is the baseline that runs through nearly every chapter in this document set ([12](./12_Layering_and_ML_Boundary_EN.md) through [16](./16_Current_Status_and_Rollout_Approach_EN.md)); when in doubt about a specific design choice, return here.
+- This principle is the baseline that runs through nearly every chapter in this document set ([12](./12_Layering_and_ML_Boundary_EN.md) through [16](./16_Current_Status_and_Rollout_Approach_EN.md), and again explicitly in [19](./19_Snapshot_MetaData_and_Reproduction_Info_EN.md)); when in doubt about a specific design choice, return here.
 
 ## Principle 2 (derived): The source of truth is the most information-rich representation; derivation only flows toward less information
 

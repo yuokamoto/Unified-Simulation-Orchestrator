@@ -13,7 +13,7 @@ Engine-specific adjustments split into two kinds by nature.
 
 ## (a) Parameter Adjustment → Separate via Overlay
 
-- Scope: **differences in value** — friction coefficients, sensor placement, degree of simplification, and the like.
+- Scope: **differences in value** — friction coefficients, sensor placement, numeric simplification thresholds (e.g., a mesh decimation tolerance or LOD distance), and the like. Note: simplification that changes the structure itself — removing a link, joint, or degree of freedom — is a case (b) structural difference below, not a value adjustment.
 - Handling: separate as an **overlay (a diff against the essence)**. The essence (source of truth) itself is not rewritten; a diff is layered on top of it, and at runtime "essence + engine-specific overlay" is composed.
 - Format-level backing: USD's sublayer/variant mechanism directly supports this "runtime composition of essence + overlay" at the format level.
 - A possible extension (needs discussion): giving an overlay a "purpose label" (e.g., "for real-hardware reproduction" vs. "for training speed-up") would keep overlays manageable as their number grows. Whether to do this at MVP time may be over-engineering, so it is left as an **Open Question** (see [17_Open_Questions_EN.md](./17_Open_Questions_EN.md)).
