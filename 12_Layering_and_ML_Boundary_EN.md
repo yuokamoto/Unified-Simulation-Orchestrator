@@ -38,3 +38,4 @@ USO commits to being **"orchestration of simulation execution"** only. The ML tr
 - [02_Architecture_EN.md](./02_Architecture_EN.md) — Existing definition of the Interface Layer (Master ⇔ Node, external communication)
 - [07_Interface_Messaging_EN.md](./07_Interface_Messaging_EN.md) — Existing external interface specification
 - [17_Open_Questions_EN.md](./17_Open_Questions_EN.md) — The minimal spec of the state/data supply API is not yet settled (see Open Questions)
+- [18_Snapshot_Alignment_with_Learning_Data_EN.md](./18_Snapshot_Alignment_with_Learning_Data_EN.md) — A concrete external consumer sitting behind this boundary, and what it requires of the snapshot format

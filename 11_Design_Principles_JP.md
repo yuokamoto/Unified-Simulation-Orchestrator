@@ -35,5 +35,8 @@
 - [14_Engine_Specific_Adjustment_JP.md](./14_Engine_Specific_Adjustment_JP.md) — 個別調整（overlay / 変換ツール）の扱い
 - [15_Simplification_Automation_Strategy_JP.md](./15_Simplification_Automation_Strategy_JP.md) — 簡略化の自動化戦略
 - [16_Current_Status_and_Rollout_Approach_JP.md](./16_Current_Status_and_Rollout_Approach_JP.md) — 既存アプリ／specとの接続状況
+- [18_Snapshot_Alignment_with_Learning_Data_JP.md](./18_Snapshot_Alignment_with_Learning_Data_JP.md) — 原則2を、状態 vs. レンダリング画像（スナップショット形式の外部利用者向け）に適用したもの
+- [19_Snapshot_MetaData_and_Reproduction_Info_JP.md](./19_Snapshot_MetaData_and_Reproduction_Info_JP.md) — 原則1を適用し、アセット単位の状態・再現情報・自由記述メタデータをスナップショットの別々のフィールドに分割したもの
+- [20_MetaData_Extensibility_Patterns_JP.md](./20_MetaData_Extensibility_Patterns_JP.md) — `meta_data`/`properties`内の将来の型付き拡張機構についての先行事例と候補案（探索段階、未決定）
 - [17_Open_Questions_JP.md](./17_Open_Questions_JP.md) — 未解決の論点
 - [02_Architecture_JP.md](./02_Architecture_JP.md) — 本原則が実装されているレイヤー構造

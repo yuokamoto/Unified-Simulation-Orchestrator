@@ -41,3 +41,4 @@
 - [04_BehaviorTree_Specification_JP.md](./04_BehaviorTree_Specification_JP.md) — タスク論理フォーマット（BT）の既存仕様
 - [14_Engine_Specific_Adjustment_JP.md](./14_Engine_Specific_Adjustment_JP.md) — overlayによるパラメータ調整の分離
 - [16_Current_Status_and_Rollout_Approach_JP.md](./16_Current_Status_and_Rollout_Approach_JP.md) — PyBulletFleet側のUSD/環境ローダーの既存決定事項
+- [18_Snapshot_Alignment_with_Learning_Data_JP.md](./18_Snapshot_Alignment_with_Learning_Data_JP.md) — 外部利用者に対して状態フォーマットが復元十分であり続けるための拡張

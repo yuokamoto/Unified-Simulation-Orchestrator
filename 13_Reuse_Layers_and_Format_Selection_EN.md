@@ -41,3 +41,4 @@ The lower the layer (assets), the broader the reuse scope; the closer to the upp
 - [04_BehaviorTree_Specification_EN.md](./04_BehaviorTree_Specification_EN.md) — Existing specification of the task logic format (BT)
 - [14_Engine_Specific_Adjustment_EN.md](./14_Engine_Specific_Adjustment_EN.md) — Separation of parameter adjustment via overlay
 - [16_Current_Status_and_Rollout_Approach_EN.md](./16_Current_Status_and_Rollout_Approach_EN.md) — Existing decisions on PyBulletFleet's USD/environment loader
+- [18_Snapshot_Alignment_with_Learning_Data_EN.md](./18_Snapshot_Alignment_with_Learning_Data_EN.md) — Extending the state format to stay restoration-sufficient for an external consumer

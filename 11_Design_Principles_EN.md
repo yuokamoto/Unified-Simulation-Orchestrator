@@ -36,4 +36,7 @@ Every time the simulator or the robot changes, things that should conceptually s
 - [15_Simplification_Automation_Strategy_EN.md](./15_Simplification_Automation_Strategy_EN.md) — Automation strategy for simplification
 - [16_Current_Status_and_Rollout_Approach_EN.md](./16_Current_Status_and_Rollout_Approach_EN.md) — Connection to existing apps/specs
 - [17_Open_Questions_EN.md](./17_Open_Questions_EN.md) — Unresolved points
+- [18_Snapshot_Alignment_with_Learning_Data_EN.md](./18_Snapshot_Alignment_with_Learning_Data_EN.md) — Applying Principle 2 to state vs. rendered image, for an external consumer of the snapshot format
+- [19_Snapshot_MetaData_and_Reproduction_Info_EN.md](./19_Snapshot_MetaData_and_Reproduction_Info_EN.md) — Applying Principle 1 to split per-asset state, reproduction info, and freeform meta data into distinct snapshot fields
+- [20_MetaData_Extensibility_Patterns_EN.md](./20_MetaData_Extensibility_Patterns_EN.md) — Prior art and candidate approaches for a future typed-extension mechanism within `meta_data`/`properties` (exploration, not decided)
 - [02_Architecture_EN.md](./02_Architecture_EN.md) — The layered structure where this principle is implemented

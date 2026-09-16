@@ -35,5 +35,6 @@ USO は「シミュレーション実行のオーケストレーション」に�
 
 - [11_Design_Principles_JP.md](./11_Design_Principles_JP.md) — 本章の前提となる原則
 - [02_Architecture_JP.md](./02_Architecture_JP.md) — Interface Layer（Master ⇔ Node、外部通信）の既存定義
-- [07_Interface_Messaging_EN.md](./07_Interface_Messaging_EN.md) — 既存の外部インターフェース仕様
+- [07_Interface_Messaging_JP.md](./07_Interface_Messaging_JP.md) — 既存の外部インターフェース仕様
 - [17_Open_Questions_JP.md](./17_Open_Questions_JP.md) — state/data supply API の最小仕様は未確定（Open Question参照）
+- [18_Snapshot_Alignment_with_Learning_Data_JP.md](./18_Snapshot_Alignment_with_Learning_Data_JP.md) — この境界の裏側に立つ具体的な外部利用者と、それがスナップショット形式に要求するもの
