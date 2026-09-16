@@ -127,6 +127,7 @@ This ownership model prevents conflicting updates and ensures deterministic stat
    - Each asset (robot, human, object, etc.) is assigned to one and only one simulation node.  
    - Only the owning node may update the asset's state (position, velocity, joint_positions, joint_velocities, status, connections, properties) in delta snapshots — this list follows the asset schema in [03_Snapshot_Specification_EN.md](./03_Snapshot_Specification_EN.md) and grows with it; it is not a fixed enumeration.  
    - Other nodes receive the asset's state as read-only via the integrated snapshot from the Master.
+   - This single-owner rule covers per-asset state only. The global `reproduction_info` and `meta_data` fields ([03_Snapshot_Specification_EN.md](./03_Snapshot_Specification_EN.md)) have no per-node owner: only the Simulation Master may set or update them, as part of composing the integrated snapshot. A node's own delta snapshots must not include `updated_reproduction_info` / `updated_meta_data`. How a node or tool requests a change to these fields is not yet defined — see Open Question 8 in [17_Open_Questions_EN.md](./17_Open_Questions_EN.md).
 
 2. **Ownership Assignment**  
    - Ownership is determined at initialization based on the scenario and initial snapshot.  

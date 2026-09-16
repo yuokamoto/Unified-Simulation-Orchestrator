@@ -36,6 +36,6 @@ Choosing between (or combining) these, and deciding whether this is worth buildi
 
 ## Related Documents
 
-- [19_Snapshot_MetaData_and_Reproduction_Info_EN.md](./19_Snapshot_MetaData_and_Reproduction_Info_EN.md) — The decision this document explores a follow-on question to
+- [19_Snapshot_MetaData_and_Reproduction_Info_EN.md](./19_Snapshot_MetaData_and_Reproduction_Info_EN.md) — The decision that raised the follow-on question this document explores
 - [03_Snapshot_Specification_EN.md](./03_Snapshot_Specification_EN.md) — Where `meta_data`/`properties` are defined today (freeform, no schema)
 - [17_Open_Questions_EN.md](./17_Open_Questions_EN.md) — Open Question 9, recorded from this exploration

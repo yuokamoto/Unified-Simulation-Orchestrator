@@ -127,6 +127,7 @@ class SimulationNode:
    - 各アセット（ロボット、人、オブジェクト等）は、1つのシミュレーションノードにのみ割り当てられる。  
    - 所有ノードのみがそのアセットの状態（位置、速度、joint_positions、joint_velocities、ステータス、接続関係、properties）を差分スナップショットで更新できる——この一覧は [03_Snapshot_Specification_JP.md](./03_Snapshot_Specification_JP.md) のアセットスキーマに従い、それとともに増える。固定的な列挙ではない。  
    - 他のノードは、Masterからの統合スナップショットを通じて読み取り専用でそのアセットの状態を受信する。
+   - この単一オーナー原則はアセット単位の状態にのみ適用される。グローバルな `reproduction_info` / `meta_data` フィールド（[03_Snapshot_Specification_JP.md](./03_Snapshot_Specification_JP.md)）にはノード単位のオーナーは存在しない：これらを設定・更新できるのは、統合スナップショットを構成する一部としてのSimulation Masterのみである。ノード自身の差分スナップショットに`updated_reproduction_info`/`updated_meta_data`を含めてはならない。ノードやツールがこれらのフィールドの変更を要求する仕組みはまだ定義されていない——[17_Open_Questions_JP.md](./17_Open_Questions_JP.md) の項目8を参照。
 
 2. **オーナーシップの割り当て**  
    - オーナーシップは、シナリオと初期スナップショットに基づき初期化時に決定される。  
