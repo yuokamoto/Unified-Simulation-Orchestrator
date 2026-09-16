@@ -19,7 +19,7 @@
 - **Protocol Buffers** — `google.protobuf.Any`（`type_url`＋シリアライズされたペイロード。そのtypeを知っているconsumerだけが展開する）と、`Struct`/`Value`というwell-known type（公式に用意された「自由記述JSON」の逃げ道。厳密に型付けされたメッセージと対比される）
 - **CloudEvents**（CNCF） — イベントは`type`（イベント種別を識別）と`data`ペイロードを持つ。`data`が従うスキーマは別属性の任意項目`dataschema`が指し示し、それを定義した者が所有・バージョン管理する。`type`を認識しない（あるいはスキーマを持たない）consumerでも、イベントを不透明なままルーティング・保存することは可能
 - **OCI**（コンテナ／アーティファクト仕様） — `mediaType`/`artifactType`フィールドが、それ自体は不透明なペイロードの解釈方法を宣言する
-- **JSON Schemaの`oneOf` ＋ OpenAPI 3の`discriminator`** — `oneOf`（JSON Schemaのキーワード）は、値が複数のスキーマのうちちょうど1つに一致することを要求する。`discriminator`（JSON Schema自体には無い、OpenAPI独自の拡張）は、その値がどのスキーマに該当するかを明示的に示すフィールドを追加し、全スキーマを総当たりで試す必要をなくす
+- **JSON Schemaの`oneOf` ＋ OpenAPI 3の`discriminator`** — `oneOf`（JSON Schemaのキーワード）は、値が複数のスキーマのうちちょうど1つに一致することを要求し、実際の検証を担うのはこちらである。`discriminator`（JSON Schema自体には無い、OpenAPI独自の拡張）は新しいフィールドを追加するのではなく、`propertyName`によってペイロード中の**既存の**プロパティを指し示し、その値をスキーマへ任意にマッピングするだけであり、これにより`oneOf`の各候補を総当たりで試す代わりに、ツールが直接正しい分岐を選べるようにする
 - **glTF**（Khronos） — コア仕様に加え、登録された`extensions`名前空間を持つ。`extensionsUsed`/`extensionsRequired`という配列により、ファイルが「ローダーがどの拡張を理解しなければ正しく解釈できないか」と「無視してよい拡張はどれか」を明示的に宣言できる
 - **OpenUSD**（Pixar） — USOがすでにアセット形式として依拠しているため直接関連が深い：プラグイン登録された **IsA / API schema** が、フォールバック／デフォルト値を伴う型付き属性セットを定義する（これはUSD自体のスキーマ／デフォルト値の意味論であり、JSON Schemaのような必須フィールド検証を強制するものではない）。**`customData`/`assetInfo`** はそれ以外の自由記述辞書として残る。これはUSOがすでに`reproduction_info` vs. `meta_data`で行った二層分割と同じものが、USOがすでに使っているフォーマット自体にネイティブに存在する例
 - **OpenTelemetry** のsemantic conventions — 名前空間付きのwell-knownな属性キーと、任意のカスタム属性が同じオブジェクト上に共存する
