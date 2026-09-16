@@ -1,7 +1,7 @@
 # 17. Open Questions
 
 **Status:** Draft
-**Date:** 2026-08-17 (items 1-5); updated 2026-08-31 (items 6-7 added); updated 2026-09-16 (item 7 resolved, items 8-10 added)
+**Date:** 2026-08-17 (items 1-5); updated 2026-08-31 (items 6-7 added); updated 2026-09-16 (item 7 resolved, items 8-11 added)
 
 > The points listed here were not resolved in the design discussions as of the dates above. They are not for an agent to fill in unilaterally; update this file together with the relevant document once a decision-maker has made a call.
 
@@ -56,8 +56,13 @@
 
 - Background: once the snapshot schema (and its extension mechanism — see Open Questions 6, 8, and 9) stabilizes, per-language libraries for schema validation, conversion to/from native data structures (e.g., a Python dict), and temporal reconstruction ("given a full snapshot plus deltas, resolve the state at time T" — the replay capability from [06_Logging_Replay_EN.md](./06_Logging_Replay_EN.md)) would let every compliant simulation node share the same logic instead of each reimplementing it. Building this now, before the schema stabilizes, risks churn and prematurely freezing decisions that are still deliberately open.
 - If and when this is built, it should follow the same "define once, generate per language" pattern already committed to for gRPC in [09_Build_Strategy_EN.md](./09_Build_Strategy_EN.md) (`.proto` → `protoc` → per-language code via `scripts/gen_grpc.sh`), rather than hand-written, independently maintained libraries per language — the latter would recreate the same "duplicated logic drifting apart across languages" problem Principle 1 exists to avoid. Note that generation only goes so far: `protoc`-style tooling produces typed data bindings and (de)serialization code, not the snapshot merge/replay algorithm or richer validation constraints (e.g., "both joint fields present together," per Open Question 6) — those still need a deliberately shared implementation of their own, generated or not, so they are not left to drift the same way.
-- A proposed implementation path (not yet agreed, but consistent with the bottom-up approach in [16_Current_Status_and_Rollout_Approach_EN.md](./16_Current_Status_and_Rollout_Approach_EN.md)): implement first within PyBulletFleet alone (referencing this repository's design), then extract the common logic out of that concrete implementation into a reusable library, then generalize it for other simulators — abstracting from multiple concrete instances rather than designing the shared library up front.
+- A proposed implementation path (not yet agreed): implement first within PyBulletFleet alone (referencing this repository's design). This needs to be reconciled with the bottom-up policy in [16_Current_Status_and_Rollout_Approach_EN.md](./16_Current_Status_and_Rollout_Approach_EN.md), which calls for two or three concrete apps before abstracting a common layer — abstracting from a single app risks freezing PyBulletFleet-specific replay semantics as if they were the general cross-simulator contract. Until a second concrete implementation exists, any library extracted at this stage should be scoped and labeled as PyBulletFleet-specific rather than promoted to a shared cross-simulator library.
 - Related document: [06_Logging_Replay_EN.md](./06_Logging_Replay_EN.md), [09_Build_Strategy_EN.md](./09_Build_Strategy_EN.md), [16_Current_Status_and_Rollout_Approach_EN.md](./16_Current_Status_and_Rollout_Approach_EN.md), [20_MetaData_Extensibility_Patterns_EN.md](./20_MetaData_Extensibility_Patterns_EN.md)
+
+## 11. Exact Contract for a Camera Asset's Static Calibration (Intrinsics)
+
+- Background: [03_Snapshot_Specification_EN.md](./03_Snapshot_Specification_EN.md) and [19_Snapshot_MetaData_and_Reproduction_Info_EN.md](./19_Snapshot_MetaData_and_Reproduction_Info_EN.md) conclude that a camera's intrinsics (focal length, resolution, field of view) belong to its asset's static model description rather than to `reproduction_info`, but no such static-camera contract is actually defined yet — the schema's `model` field is only a path, with no calibration schema or lookup convention specified. Excluding camera intrinsics from `reproduction_info` is only complete once this static contract exists (e.g., as fields under the asset's `properties`, or as part of the referenced model file's own format).
+- Related document: [03_Snapshot_Specification_EN.md](./03_Snapshot_Specification_EN.md), [19_Snapshot_MetaData_and_Reproduction_Info_EN.md](./19_Snapshot_MetaData_and_Reproduction_Info_EN.md)
 
 ## Related Documents
 

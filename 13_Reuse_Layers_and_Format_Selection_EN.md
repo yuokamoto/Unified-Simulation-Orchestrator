@@ -23,7 +23,7 @@ The lower the layer (assets), the broader the reuse scope; the closer to the upp
 | Target | Format | Rationale |
 |---|---|---|
 | Environment / scene | OpenUSD | Rich Isaac asset ecosystem, has overlay capability |
-| Robot structure | URDF/SDF | Cross-robotics de facto standard; readable by PyBullet/MuJoCo/Gazebo |
+| Robot structure | URDF/SDF | Cross-robotics de facto standard; URDF is widely supported (PyBullet and Gazebo natively, MuJoCo via import/conversion — MuJoCo's native format is MJCF); SDF is Gazebo-native, with conversion needed for other engines |
 | Task logic | Behavior Tree (BehaviorTree.CPP v4 XML as canonical) | Common format with proven GUI editing and C++/Python conversion (see [04_BehaviorTree_Specification](./04_BehaviorTree_Specification_EN.md)) |
 | State | Snapshot (full / delta) | Unifies initialization, synchronization, bug reproduction, and replay (see [03_Snapshot_Specification](./03_Snapshot_Specification_EN.md)) |
 

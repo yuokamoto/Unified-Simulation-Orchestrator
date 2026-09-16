@@ -1,7 +1,7 @@
 # 17. Open Questions（未解決の論点）
 
 **Status:** Draft
-**Date:** 2026-08-17（項目1〜5）／2026-08-31 更新（項目6〜7を追加）／2026-09-16 更新（項目7を解決、項目8〜10を追加）
+**Date:** 2026-08-17（項目1〜5）／2026-08-31 更新（項目6〜7を追加）／2026-09-16 更新（項目7を解決、項目8〜11を追加）
 
 > ここに列挙する論点は、上記各時点の設計議論では結論が出ていない。agent が勝手に埋めるものではなく、意思決定者が判断した時点で、該当ドキュメントとあわせて更新すること。
 
@@ -56,8 +56,13 @@
 
 - 背景：スナップショットのスキーマ（および項目6・8・9で扱う拡張機構）が固まったら、各言語向けにスキーマバリデーション、ネイティブなデータ構造（例：Pythonのdict）への変換、時間指定での状態復元（「フルスナップショット＋デルタ群から、任意時刻tの状態を再構成する」——[06_Logging_Replay_JP.md](./06_Logging_Replay_JP.md)のリプレイ機能）を提供する共通ライブラリを持てば、準拠するすべてのシミュレーションノードが同じロジックを共有でき、各ノードが個別に再実装せずに済む。ただしスキーマが固まる前に今作ると、変更のたびに手戻りが発生し、まだ意図的に開いたままにしている論点を実装によって既成事実化してしまうリスクがある。
 - 作るとしても、[09_Build_Strategy_JP.md](./09_Build_Strategy_JP.md) でgRPCについてすでに決めている「一箇所で定義し、各言語向けに生成する」方式（`.proto` → `protoc` → `scripts/gen_grpc.sh`経由で各言語のコードを生成）に倣うべきであり、言語ごとに独立して手書き・保守するライブラリにはすべきではない。後者は、原則1がまさに避けようとしている「同じロジックの重複実装が言語間でズレていく」問題を再現してしまう。ただし生成で解決できる範囲には限りがある：`protoc`的な生成ツールが作るのは型付きデータバインディングとシリアライズ／デシリアライズのコードであり、スナップショットのマージ／リプレイアルゴリズムや、より踏み込んだ検証制約（例：項目6の「関節フィールドは両方セットで必要」）までは生成しない。これらは生成物であるかどうかにかかわらず、別途意図的に共有された実装を持つ必要があり、そうしないと同じように言語間でズレていく。
-- 想定される実装の進め方（未合意だが、[16_Current_Status_and_Rollout_Approach_JP.md](./16_Current_Status_and_Rollout_Approach_JP.md) のボトムアップ方針と整合的）：まずPyBulletFleet単体で（本リポジトリの設計を参照しながら）実装し、その具体的な実装から共通ロジックを抽出して再利用可能なライブラリとし、そこから他のシミュレータ向けに一般化する——共通ライブラリを先に設計するのではなく、複数の具体例から抽象化するという順序。
+- 想定される実装の進め方（未合意）：まずPyBulletFleet単体で（本リポジトリの設計を参照しながら）実装する。ただしこれは、共通層を抽象化する前に2〜3個の具体アプリを作るべきとする [16_Current_Status_and_Rollout_Approach_JP.md](./16_Current_Status_and_Rollout_Approach_JP.md) のボトムアップ方針とすり合わせが必要である——単一のアプリから抽出すると、PyBulletFleet固有のリプレイ意味論を、あたかも一般的なシミュレータ横断の契約であるかのように固定してしまうリスクがある。2つ目の具体実装ができるまでは、この段階で抽出するライブラリは、共通のシミュレータ横断ライブラリに格上げするのではなく、PyBulletFleet専用と明記してスコープを限定すべきである。
 - 関連ドキュメント：[06_Logging_Replay_JP.md](./06_Logging_Replay_JP.md)、[09_Build_Strategy_JP.md](./09_Build_Strategy_JP.md)、[16_Current_Status_and_Rollout_Approach_JP.md](./16_Current_Status_and_Rollout_Approach_JP.md)、[20_MetaData_Extensibility_Patterns_JP.md](./20_MetaData_Extensibility_Patterns_JP.md)
+
+## 11. カメラアセットの静的な較正情報（内部パラメータ）の正確な契約
+
+- 背景：[03_Snapshot_Specification_JP.md](./03_Snapshot_Specification_JP.md) と [19_Snapshot_MetaData_and_Reproduction_Info_JP.md](./19_Snapshot_MetaData_and_Reproduction_Info_JP.md) は、カメラの内部パラメータ（焦点距離・解像度・画角）は`reproduction_info`ではなくそのアセットの静的なモデル記述に属すると結論づけたが、その静的カメラ契約自体はまだ定義されていない——スキーマの`model`フィールドは単なるパスであり、較正用スキーマや参照規約は未指定である。カメラの内部パラメータを`reproduction_info`から除外するという結論は、この静的契約（例：アセットの`properties`配下のフィールドとして、または参照先モデルファイル自体のフォーマットの一部として）が定義されて初めて完結する。
+- 関連ドキュメント：[03_Snapshot_Specification_JP.md](./03_Snapshot_Specification_JP.md)、[19_Snapshot_MetaData_and_Reproduction_Info_JP.md](./19_Snapshot_MetaData_and_Reproduction_Info_JP.md)
 
 ## 関連ドキュメント
 

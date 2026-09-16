@@ -23,7 +23,7 @@
 | 対象 | フォーマット | 選定理由 |
 |---|---|---|
 | 環境・シーン | OpenUSD | Isaac 資産が豊富、overlay 機能を持つ |
-| ロボット構造 | URDF/SDF | ロボティクスの横断デファクト。PyBullet/MuJoCo/Gazebo が読める |
+| ロボット構造 | URDF/SDF | ロボティクスの横断デファクト。URDFはPyBullet・Gazeboでネイティブに、MuJoCoでもインポート／変換経由で広く扱える（MuJoCoのネイティブ形式はMJCF）。SDFはGazeboネイティブで、他エンジンでは変換が必要 |
 | タスク論理 | Behavior Tree（BehaviorTree.CPP v4 XML を canonical に） | GUI編集・C++/Python双方への変換実績がある共通フォーマット（[04_BehaviorTree_Specification](./04_BehaviorTree_Specification_JP.md) 参照） |
 | 状態 | スナップショット（フル／デルタ） | 初期化・同期・バグ再現・リプレイを統一的に扱える（[03_Snapshot_Specification](./03_Snapshot_Specification_JP.md) 参照） |
 

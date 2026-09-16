@@ -15,7 +15,7 @@
 
 「**typeタグがどのスキーマに従うペイロードかを識別し、あるtypeのスキーマはそれを定義した者が所有・バージョン管理する**」という考え方のバリエーションは、広く使われている複数のシステムに繰り返し現れる。ただし細部は異なる（認識できないtypeを黙って無視するか、剪定するか、拒否するか。そもそも全てのペイロードが明示的なtypeタグを持つとは限らない）：
 
-- **Kubernetes** — `labels`/`annotations`（自由記述、`<domain>/<name>`の名前空間付きキー、検証なし） vs. **CustomResourceDefinition**（`kind`ごとに登録されたOpenAPI v3スキーマを持ち、`required`フィールドや検証を持てる。未知フィールドの保持も可能）
+- **Kubernetes** — `labels`/`annotations`（`<domain>/<name>`の名前空間付きキー。Kubernetes組み込みの構文・長さ制約はあるが、利用者定義スキーマによる検証はない） vs. **CustomResourceDefinition**（`kind`ごとに登録されたOpenAPI v3スキーマを持ち、`required`フィールドや検証を持てる。未知フィールドの保持も可能）
 - **Protocol Buffers** — `google.protobuf.Any`（`type_url`＋シリアライズされたペイロード。そのtypeを知っているconsumerだけが展開する）と、`Struct`/`Value`というwell-known type（公式に用意された「自由記述JSON」の逃げ道。厳密に型付けされたメッセージと対比される）
 - **CloudEvents**（CNCF） — イベントは`type`（イベント種別を識別）と`data`ペイロードを持つ。`data`が従うスキーマは別属性の任意項目`dataschema`が指し示し、それを定義した者が所有・バージョン管理する。`type`を認識しない（あるいはスキーマを持たない）consumerでも、イベントを不透明なままルーティング・保存することは可能
 - **OCI**（コンテナ／アーティファクト仕様） — `mediaType`/`artifactType`フィールドが、それ自体は不透明なペイロードの解釈方法を宣言する
