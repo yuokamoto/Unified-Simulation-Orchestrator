@@ -44,8 +44,8 @@ This leaves `reproduction_info` holding only settings that genuinely have no sin
 
 This three-way split is a direct application of Principle 1 in [11_Design_Principles_EN.md](./11_Design_Principles_EN.md) (separate things that change for different reasons, bridge with a common format):
 
-- Per-asset dynamic state (`position`, `velocity`, `joint_positions`) changes every simulation step, for physics/logic reasons. The per-asset `properties` field is scoped the same way (per asset) but, being arbitrary user-defined data, carries no cadence guarantee of its own — it may change every step, rarely, or never.
-- `reproduction_info` changes at most once per episode (typically at reset), for rendering/observer-setup reasons.
+- Per-asset dynamic state (`position`, `velocity`, `joint_positions`, `joint_velocities`) changes every simulation step, for physics/logic reasons. The per-asset `properties` field is scoped the same way (per asset) but, being arbitrary user-defined data, carries no cadence guarantee of its own — it may change every step, rarely, or never.
+- `reproduction_info` changes at most once per episode (typically at reset), for rendering/observer-setup reasons — but because every full snapshot must be complete and self-sufficient as a replay anchor, it is repeated in every full snapshot taken during the episode (not only the one at reset); only deltas may omit it since it has not changed.
 - `meta_data` changes at whatever rate a user chooses, for reasons entirely outside the framework's concern.
 
 Keeping these as three distinct, separately named fields — rather than merging any of them — preserves the ability to reason about, and depend on, each independently.

@@ -125,7 +125,7 @@ This ownership model prevents conflicting updates and ensures deterministic stat
 
 1. **Single-Owner Principle**  
    - Each asset (robot, human, object, etc.) is assigned to one and only one simulation node.  
-   - Only the owning node may update the asset's state (position, velocity, joint_positions, joint_velocities, status, connections) in delta snapshots — this list follows the asset schema in [03_Snapshot_Specification_EN.md](./03_Snapshot_Specification_EN.md) and grows with it; it is not a fixed enumeration.  
+   - Only the owning node may update the asset's state (position, velocity, joint_positions, joint_velocities, status, connections, properties) in delta snapshots — this list follows the asset schema in [03_Snapshot_Specification_EN.md](./03_Snapshot_Specification_EN.md) and grows with it; it is not a fixed enumeration.  
    - Other nodes receive the asset's state as read-only via the integrated snapshot from the Master.
 
 2. **Ownership Assignment**  
