@@ -42,6 +42,20 @@
 
 ---
 
+## Simulator Landscape Trends (2025–2026) and Why USO Stays Framework-Agnostic
+
+> Recorded from a later design discussion (2026-08-31); see also [11_Design_Principles_EN.md](./11_Design_Principles_EN.md).
+
+The physics/training-simulator ecosystem keeps moving, which is itself an argument for treating the simulator layer as swappable rather than betting on one:
+
+- **Rendering-free, state-based policy training** (e.g., MuJoCo-based MJX/Playground) can run at very high step-rates across platforms, and much current RL/VLA evaluation tooling assumes this style.
+- **Large-scale parallel locomotion/manipulation** (GPU-parallel) is a strength of Isaac Lab.
+- **Photoreal perception training and synthetic data** (rendering required) remains a strength of Isaac Sim / Replicator.
+- **Convergence in progress**: Newton (an NVIDIA/DeepMind/Disney collaboration targeting physics accuracy together with GPU parallelism, on a MuJoCo-Warp backend) and mjlab (pairing the Isaac Lab API with MuJoCo's lightness) suggest the boundaries between these tools may blur over the next year or two.
+- **Implication for USO**: lean on USD for assets so they aren't wasted across a MuJoCo ↔ Newton-style transition, but avoid over-committing the framework layer to any single one of these. USO's multi-engine switching capability is itself the hedge against this churn — a concrete instance of why [Principle 1 in 11_Design_Principles_EN.md](./11_Design_Principles_EN.md) treats "which training framework is in fashion" as a reason for change that must stay decoupled from assets and task logic.
+
+---
+
 ## Rationale for Communication and Middleware Choices
 
 1. **gRPC (External Communication)**

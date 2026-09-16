@@ -29,12 +29,34 @@ world:
       orientation: [qx, qy, qz, qw]  # クォータニオンでの姿勢
       linear_velocity: [vx, vy, vz]  # 速度ベクトル
       angular_velocity: [wx, wy, wz] # 角速度
+      joint_positions:  # 非規範的な例——正確な形状（命名規則、単位、球関節・自由関節のような
+                        # 多自由度関節のキー付け方）は未確定。項目6参照。非多関節アセットでは
+                        # joint_positions・joint_velocities とも省略する。多関節アセットでは、
+                        # 復元十分なフルスナップショットとして両方がセットで必要（ポーズだけでは
+                        # 動作中の状態を復元できない）——ただし必ずしもこの「関節ごとに1つの
+                        # float」という形状とは限らない。
+        <joint_name>: <float>   # あくまで例示：単一自由度（回転／直動）関節の角度（rad）または
+                                 # 変位（m）。多自由度関節にはこのままでは使えない。
+      joint_velocities: # 多関節アセットでは joint_positions とセットで必要——上記と同じ
+                        # 非規範的な注意点が当てはまる
+        <joint_name>: <float>   # あくまで例示——joint_positions 参照
       status: <string>  # 任意の状態ラベル（"idle", "moving", "error"等）
       connected_to: [<asset_id>, ...]  # 接続されている他アセットのリスト（例: ロボットがパレットを運んでいる場合）。接続なしの場合は空リスト。
       properties:       # 内部状態や追加属性
         battery_level: 0.85
         custom_flags:
           carrying_load: true
+  reproduction_info:   # グローバル（アセット単位ではない）。状態からレンダリング画像を再生成する
+                        # 利用者にのみ必須 — 詳細は下記「グローバル（非アセット）フィールド」参照
+    lighting: <構造化された照明の記述>
+    domain_randomization: {<param_name>: <value>, ...}  # 視覚・レンダリング用のランダム化のみ（例：
+                                                          # テクスチャ、マテリアル）——摩擦・質量など
+                                                          # 動力学に影響するランダム化はシミュレー
+                                                          # ション状態であり、reproduction_infoではない
+    seed: <int>          # あくまで例示：整数値だけでは、開始後に既に消費した乱数のRNGアルゴリズム／
+                          # ストリーム位置を特定できない——項目8参照
+  meta_data:            # 任意、グローバル、自由記述 — 詳細は下記「グローバル（非アセット）フィールド」参照
+    <key>: <value>
 ```
 
 ---
@@ -66,11 +88,19 @@ world:
         "status": "idle",
         "connected_to": []
       }
+    },
+    "updated_reproduction_info": {
+      "seed": 42
+    },
+    "updated_meta_data": {
+      "experiment_tag": "run_017"
     }
   }
 }
 
 ```
+
+> **非規範的な例示：** 上記の `updated_reproduction_info` / `updated_meta_data` はフィールドの形状の例示に過ぎない。省略されたフィールドやキーを受信側が保持・置換・削除のどれとして扱うかはまだ定義されていない——項目8参照。実際には、この2つのキーを書き込めるのはSimulation Masterのみである（下記「グローバル（非アセット）フィールド」参照）。この例のようにノード自身の差分スナップショット（`node_id: "simpy_A"`）には含めてはならない。
 
 ---
 
@@ -85,9 +115,33 @@ world:
 
 ---
 
+## グローバル（非アセット）フィールド
+
+スナップショットが持つのはアセット単位の状態だけではない。`world` の直下に、`assets` と並んで2つのフィールドが置かれる：
+
+- **`reproduction_info`** — 状態から、画像そのものを保存せずにレンダリング画像を再生成するために特に必要となる、**シーン全体・レンダリング限定**の構造化された型付きデータ（照明、および*視覚的な*Domain Randomization——テクスチャ、マテリアル、カメラ／センサーノイズなど——、乱数シード）。動力学に影響するDomain Randomization（摩擦、質量、アクチュエータゲインなど）は意図的に除外する：それらはシミュレーションの続行のされ方を変えるため、reproduction infoではなくシミュレーション状態であり、任意扱いにしてはならない。こうしたエピソードごとにサンプリングされる動力学関連の値をスキーマのどこに記録するかはまだ決まっていない——唯一のアセット単位の拡張ポイントである`properties`は自由記述であり、利用者が特定のキーの存在を当てにできる保証を一切与えない——項目12参照。動力学に影響するランダム化を除外しているからこそ、このフィールドはシミュレーションを続行するためには**不要**である。エピソード単位のスコープを持ち、通常は実行中変化しない。あらゆるフルスナップショットはリプレイアンカーとして完全・自己完結でなければならないため（[18_Snapshot_Alignment_with_Learning_Data_JP.md](./18_Snapshot_Alignment_with_Learning_Data_JP.md) 参照）、リセット時だけでなく、そのエピソード中に取得される**あらゆる**フルスナップショットに繰り返し含まれ、変化していないため差分でのみ省略される。
+  - **カメラは `reproduction_info` には含まれない。** 観測に使うカメラそのものはグローバルな状態ではなく、アセットである：ロボットに剛体的に取り付けられたセンサー（例：手首カメラ）の世界座標での姿勢は、親アセットの追跡済みの状態——ルート姿勢、および多関節アセットであればすでに追跡されている`joint_positions`——と、アセットのモデルで定義された固定の取り付けオフセット・キネマティックチェーンを組み合わせることで常に導出できるため、専用のスナップショットフィールドは一切不要である（ルート姿勢からの単一の固定オフセットだけで十分なのは、カメラが非多関節の剛体に直接取り付けられている場合に限る）。据え置き型の観測カメラ（例：作業エリアを見下ろす固定俯瞰カメラ）は、他のアセットと同様に（`type: "camera"`、通常通り `position`/`orientation` を持つ形で）追跡する。内部パラメータ（焦点距離など）は、毎ステップの動的データではなく、そのアセットのモデルの静的な属性として持つ——ただし、その較正情報（焦点距離・解像度・画角）をどこに・どう表現するかという正確な契約はまだ標準化されていない（`model`は単なるパスであり、較正用スキーマや参照規約は未定義）ため、この静的カメラ契約が存在して初めてこの除外は完結する——項目11参照。詳細は [19_Snapshot_MetaData_and_Reproduction_Info_JP.md](./19_Snapshot_MetaData_and_Reproduction_Info_JP.md) を参照。
+- **`meta_data`** — 復元のためには不要な、グローバル（シミュレーション全体）スコープの自由記述データを持つための、ユーザー定義のバッグ。既存のアセット単位 `properties` フィールドのグローバル版にあたる。実験タグ、デバッグ用フラグ、その他任意のカスタムデータに使う。形状は意図的に制約されていないため、フレームワーク側や外部利用者側は、このフィールドの存在や特定のキーの有無に依存すべきではない。
+
+どちらも任意フィールドである。この分割に至った設計議論は [19_Snapshot_MetaData_and_Reproduction_Info_JP.md](./19_Snapshot_MetaData_and_Reproduction_Info_JP.md)、未解決点（サブフィールドの正確な形状）は [17_Open_Questions_JP.md](./17_Open_Questions_JP.md) を参照。
+
+**分散モードでの書き込み権限。** アセット単位の状態と異なり、どちらのフィールドにもノード単位のオーナーは存在しない：`reproduction_info`と`meta_data`を設定・更新できるのはSimulation Masterのみであり、Masterが配布する統合スナップショットを構成する一部として行う（[05_SimulationMaster_NodeDesign_JP.md](./05_SimulationMaster_NodeDesign_JP.md) 参照）。ノード自身の差分スナップショットに`updated_reproduction_info`/`updated_meta_data`を含めてはならない——上記のデルタ例の注記も参照。ノードや外部ツールがこれらのフィールドの変更を要求する仕組み（直接書き込めないため）はまだ定義されていない——項目8参照。
+
+---
+
 ## 運用ポリシー
-- スナップショットは**世界の状態を記述するのみ**であり、位置や速度の更新は各シミュレータのロジックで行う。
+- スナップショットは主にアセット単位の世界の状態（位置・速度などの動的状態。更新は各シミュレータのロジックで行う）を記述する。グローバルな `reproduction_info` / `meta_data` フィールド（上記「グローバル（非アセット）フィールド」参照）はこの原則の意図的な例外であり、シミュレートされた世界の状態ではなく、レンダリング・再現設定とユーザーメタデータを持つ。
 - 利用場面：
   1. **初期化** – シミュレーション開始時に適用。
   2. **同期** – 分散モードでの状態共有。
   3. **ログ保存** – 状態の履歴を保存し、リプレイや解析に利用。
+
+---
+
+## 関連：設計議論の記録
+
+スナップショットを「状態」を表すsource of truthとして扱う位置づけ、および学習パイプラインとの境界（state/data supply API）における役割は [13_Reuse_Layers_and_Format_Selection_JP.md](./13_Reuse_Layers_and_Format_Selection_JP.md) と [12_Layering_and_ML_Boundary_JP.md](./12_Layering_and_ML_Boundary_JP.md) に記録されている。
+
+上記の `joint_positions` / `joint_velocities` フィールド（および正確な形状）は、本フォーマットの外部利用者によって顕在化した、まだ未確定の拡張である。[18_Snapshot_Alignment_with_Learning_Data_JP.md](./18_Snapshot_Alignment_with_Learning_Data_JP.md) と [17_Open_Questions_JP.md](./17_Open_Questions_JP.md) を参照。
+
+上記の `reproduction_info` / `meta_data` というグローバルフィールドは、アセット単位ではないデータ（レンダリング・再現設定、ユーザー任意のタグ）の置き場所を決めるために追加された。[19_Snapshot_MetaData_and_Reproduction_Info_JP.md](./19_Snapshot_MetaData_and_Reproduction_Info_JP.md) を参照。

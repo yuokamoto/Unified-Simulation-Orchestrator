@@ -28,6 +28,16 @@
 | 8 | [GUI設計 (EN)](08_GUI_Design_EN.md) / [JP](08_GUI_Design_JP.md) | Webベース GUI: 3Dビジュアライザ、エディタ、リプレイ |
 | 9 | [ビルド戦略 (EN)](09_Build_Strategy_EN.md) / [JP](09_Build_Strategy_JP.md) | 多言語ビルド、ディレクトリ構成、CI/CD |
 | 10 | [エンジン選定・分散Sim (EN)](10_Engine_Selection_Distributed_EN.md) / [JP](10_Engine_Selection_Distributed_JP.md) | エンジン・ミドルウェア選定の根拠 |
+| 11 | [設計原則 (EN)](11_Design_Principles_EN.md) / [JP](11_Design_Principles_JP.md) | USOを貫く2つの設計原則とその根拠 |
+| 12 | [レイヤリングとMLとの境界 (EN)](12_Layering_and_ML_Boundary_EN.md) / [JP](12_Layering_and_ML_Boundary_JP.md) | USOの責務範囲と、学習パイプラインとの境界（state/data supply API） |
+| 13 | [流用の層別とフォーマット選択 (EN)](13_Reuse_Layers_and_Format_Selection_EN.md) / [JP](13_Reuse_Layers_and_Format_Selection_JP.md) | 層ごとの流用範囲とフォーマット選定の根拠 |
+| 14 | [個別調整の扱い (EN)](14_Engine_Specific_Adjustment_EN.md) / [JP](14_Engine_Specific_Adjustment_JP.md) | パラメータ調整（overlay）と構造の違い（変換ツール）の分離 |
+| 15 | [簡略化の自動化戦略 (EN)](15_Simplification_Automation_Strategy_EN.md) / [JP](15_Simplification_Automation_Strategy_JP.md) | 詳細→簡略変換の自動化方針 |
+| 16 | [現状と展開方針 (EN)](16_Current_Status_and_Rollout_Approach_EN.md) / [JP](16_Current_Status_and_Rollout_Approach_JP.md) | 既存アプリ・specとの接続状況、ボトムアップの進め方 |
+| 17 | [未解決の論点 (EN)](17_Open_Questions_EN.md) / [JP](17_Open_Questions_JP.md) | 設計議論で未解決のまま残っている論点一覧 |
+| 18 | [スナップショットと学習データの整合 (EN)](18_Snapshot_Alignment_with_Learning_Data_EN.md) / [JP](18_Snapshot_Alignment_with_Learning_Data_JP.md) | 外部の学習データ記録フォーマットとの整合（関節state拡張） |
+| 19 | [スナップショットのグローバルフィールド (EN)](19_Snapshot_MetaData_and_Reproduction_Info_EN.md) / [JP](19_Snapshot_MetaData_and_Reproduction_Info_JP.md) | `reproduction_info` / `meta_data` の分離とその根拠 |
+| 20 | [メタデータ拡張パターン (EN)](20_MetaData_Extensibility_Patterns_EN.md) / [JP](20_MetaData_Extensibility_Patterns_JP.md) | `meta_data`/`properties`の将来の拡張機構：先行事例と候補案（探索段階） |
 
 ### 計画ドキュメント
 
