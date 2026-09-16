@@ -44,7 +44,7 @@
 
 ## 8. Exact Sub-Field Shape of `reproduction_info` and `meta_data`
 
-- Background: [19_Snapshot_MetaData_and_Reproduction_Info_EN.md](./19_Snapshot_MetaData_and_Reproduction_Info_EN.md) settled that `reproduction_info` (lighting/domain-randomization/seed — camera is deliberately excluded, see that chapter) and `meta_data` (freeform) are global fields on the snapshot, distinct from per-asset state. The exact internal shape — how domain-randomization parameters are keyed, whether `meta_data` values are constrained to any type, and how partial updates to either field are expressed in a delta snapshot — is not yet settled.
+- Background: [19_Snapshot_MetaData_and_Reproduction_Info_EN.md](./19_Snapshot_MetaData_and_Reproduction_Info_EN.md) settled that `reproduction_info` (lighting/domain-randomization/seed — camera is deliberately excluded, see that chapter) and `meta_data` (freeform) are global fields on the snapshot, distinct from per-asset state. The exact internal shape — how domain-randomization parameters are keyed, whether an integer `seed` alone is sufficient or a fuller RNG algorithm/stream-position needs to be recorded to actually reproduce draws made after simulation start, whether `meta_data` values are constrained to any type, and how partial updates to either field are expressed in a delta snapshot — is not yet settled.
 - Related document: [19_Snapshot_MetaData_and_Reproduction_Info_EN.md](./19_Snapshot_MetaData_and_Reproduction_Info_EN.md), [03_Snapshot_Specification_EN.md](./03_Snapshot_Specification_EN.md)
 
 ## 9. Should `meta_data` / `properties` Support a Registered, Typed Extension Mechanism?

@@ -44,7 +44,7 @@
 
 ## 8. `reproduction_info` / `meta_data` の正確なサブフィールド形状
 
-- 背景：[19_Snapshot_MetaData_and_Reproduction_Info_JP.md](./19_Snapshot_MetaData_and_Reproduction_Info_JP.md) で、`reproduction_info`（照明・Domain Randomization・シード。カメラは意図的に対象外——詳細は同章を参照）と `meta_data`（自由記述）が、アセット単位の状態とは別のグローバルフィールドであることは決まったが、内部の正確な形状（Domain Randomization パラメータのキー付け方、`meta_data` の値に型制約を課すか、差分スナップショットでの部分更新をどう表現するか）はまだ確定していない。
+- 背景：[19_Snapshot_MetaData_and_Reproduction_Info_JP.md](./19_Snapshot_MetaData_and_Reproduction_Info_JP.md) で、`reproduction_info`（照明・Domain Randomization・シード。カメラは意図的に対象外——詳細は同章を参照）と `meta_data`（自由記述）が、アセット単位の状態とは別のグローバルフィールドであることは決まったが、内部の正確な形状（Domain Randomization パラメータのキー付け方、整数の`seed`だけで十分か、それともシミュレーション開始後に消費した乱数を実際に再現するにはRNGアルゴリズム・ストリーム位置まで記録する必要があるか、`meta_data` の値に型制約を課すか、差分スナップショットでの部分更新をどう表現するか）はまだ確定していない。
 - 関連ドキュメント：[19_Snapshot_MetaData_and_Reproduction_Info_JP.md](./19_Snapshot_MetaData_and_Reproduction_Info_JP.md)、[03_Snapshot_Specification_JP.md](./03_Snapshot_Specification_JP.md)
 
 ## 9. `meta_data` / `properties` は、登録可能な型付き拡張の仕組みを持つべきか

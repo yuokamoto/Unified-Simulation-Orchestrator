@@ -49,8 +49,12 @@ world:
   reproduction_info:   # Global (not per-asset); required only for consumers that regenerate rendered
                         # images from state instead of storing them — see "Global (Non-Asset) Fields" below
     lighting: <structured lighting description>
-    domain_randomization: {<param_name>: <value>, ...}
-    seed: <int>
+    domain_randomization: {<param_name>: <value>, ...}  # Visual/rendering randomization only (e.g.,
+                                                          # textures, materials) — dynamics-affecting
+                                                          # randomization (friction, mass, ...) is
+                                                          # simulation state, not reproduction_info
+    seed: <int>          # Illustrative only: an integer alone does not capture RNG algorithm/stream
+                          # position after prior draws — see Open Question 8
   meta_data:            # Optional, global, freeform — see "Global (Non-Asset) Fields" below
     <key>: <value>
 ```
@@ -115,7 +119,7 @@ world:
 
 Not everything a snapshot carries is per-asset state. Two additional fields live directly under `world`, alongside `assets`:
 
-- **`reproduction_info`** — Structured, typed data needed specifically to regenerate a rendered image from state without storing the image itself: **scene-wide** rendering/reproduction settings such as lighting and domain-randomization settings, plus the random seed used. This is *not* required to continue the simulation — physics does not need it. It is episode-scoped and normally unchanged for the duration of a run, so it is typically carried once in the full snapshot rather than repeated in every delta.
+- **`reproduction_info`** — Structured, typed data needed specifically to regenerate a rendered image from state without storing the image itself: **scene-wide, rendering-only** settings — lighting and *visual* domain-randomization (textures, materials, camera/sensor noise, and the like) — plus the random seed used. This deliberately excludes any domain-randomization that affects dynamics (friction, mass, actuator gains, and the like): those change how the simulation continues, so they are simulation state, not reproduction info, and must not be treated as optional. Precisely because dynamics-affecting randomization is excluded, this field is *not* required to continue the simulation. It is episode-scoped and normally unchanged for the duration of a run, so it is typically carried once in the full snapshot rather than repeated in every delta.
   - **Cameras are not part of `reproduction_info`.** A camera used for observation is itself an asset, not global state: a sensor rigidly mounted on a robot (e.g., a wrist camera) has its world pose already derivable from the parent asset's tracked state — its root pose and, for an articulated asset, its already-tracked `joint_positions` — combined with the fixed mounting offset and kinematic chain defined in the asset's model, so it needs no separate snapshot field at all (a single fixed offset from the root pose is only sufficient when the camera is mounted directly on a non-articulated body); a free-standing observation camera (e.g., a fixed overview camera) is tracked like any other asset (`type: "camera"`, with `position`/`orientation` as usual), with its intrinsics held as a static property of that asset's model rather than as per-step data — though the exact contract for where/how that calibration (focal length, resolution, field of view) is expressed is not yet standardized (`model` here is only a path; no calibration schema or lookup convention is defined), so this exclusion is complete only once that static-camera contract exists — see Open Question 11. See [19_Snapshot_MetaData_and_Reproduction_Info_EN.md](./19_Snapshot_MetaData_and_Reproduction_Info_EN.md).
 - **`meta_data`** — A freeform, user-defined bag of global (simulation-wide) data that is not required for any restoration purpose — the global-scope counterpart to the existing per-asset `properties` field. Use it for experiment tags, debug flags, or other custom data; its shape is intentionally unconstrained, so nothing in the framework or in an external consumer should depend on it being present or on any particular key existing.
 

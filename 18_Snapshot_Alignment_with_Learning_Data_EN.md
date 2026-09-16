@@ -23,7 +23,7 @@ This is a direct instance of Principle 2 in [11_Design_Principles_EN.md](./11_De
 
 ## The Existing Full/Delta Split Already Fits This Use Case
 
-The external format separately needs "static structure" (what asset exists, its type/model) versus "dynamic state" (pose/velocity/joint state at a given step). This maps directly onto the existing full-vs-delta snapshot split ([03_Snapshot_Specification_EN.md](./03_Snapshot_Specification_EN.md)): static structure is naturally carried once in the initial full snapshot, and subsequent deltas carry only what changes. No new mechanism is needed here — this is recorded as confirmation that the existing design already generalizes to this external use case, not as a new decision.
+The external format separately needs "static structure" (what asset exists, its type/model) versus "dynamic state" (pose/velocity/joint state at a given step). This maps directly onto the existing full-vs-delta snapshot split ([03_Snapshot_Specification_EN.md](./03_Snapshot_Specification_EN.md)): static structure is naturally carried in every full snapshot — each one is complete by definition, including the periodic full-snapshot replay anchors described in [06_Logging_Replay_EN.md](./06_Logging_Replay_EN.md), not only the very first one — and simply omitted from the intervening deltas since it does not change between them. No new mechanism is needed here — this is recorded as confirmation that the existing design already generalizes to this external use case, not as a new decision.
 
 ## Reproduction Info (Camera, Lighting, Seed) Is a Separate Concern
 

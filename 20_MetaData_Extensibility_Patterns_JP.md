@@ -7,7 +7,7 @@
 
 ## 論点
 
-[19_Snapshot_MetaData_and_Reproduction_Info_JP.md](./19_Snapshot_MetaData_and_Reproduction_Info_JP.md) では、`reproduction_info`を`meta_data`の中の特定キーとして統合しても（そのキーだけにrequiredなスキーマを与えることで）、required/自由記述という区別自体はなくならず、1階層内側に移るだけだと結論づけた。この整理から、さらに別の、将来を見据えた論点が浮かぶ：**USOコア以外の、特定の外部利用者が、`meta_data`（あるいはアセット単位の`properties`）の中に自分専用の名前付き・型付きスキーマを登録し、USOコアがその利用者のスキーマを事前に知らなくても、`reproduction_info`と同じ信頼性（検証・必須フィールド）を得られるようにすべきか？**
+[19_Snapshot_MetaData_and_Reproduction_Info_JP.md](./19_Snapshot_MetaData_and_Reproduction_Info_JP.md) では、`reproduction_info`を`meta_data`の中の特定キーとして統合しても（そのキーだけにrequiredなスキーマを与えることで）、required/自由記述という区別自体はなくならず、1階層内側に移るだけだと結論づけた。この整理から、さらに別の、将来を見据えた論点が浮かぶ：**USOコア以外の、特定の外部利用者が、`meta_data`（あるいはアセット単位の`properties`）の中に自分専用の名前付き・型付きスキーマを登録し、USOコアがその利用者のスキーマを事前に知らなくても、`reproduction_info`自身の将来のスキーマ（それ自体もまだ未確定——項目8参照）で意図されているのと同種の信頼性（検証・必須フィールド）を得られるようにすべきか？**
 
 これは現時点の既知の要件（`reproduction_info`、関節state）には不要である。この議論で、まさに同じ課題に対する社内の実例と、複数の確立されたオープンソースのパターンが見つかったため、後で一から再発見しなくて済むよう、設計の近くに記録しておく。
 
